@@ -1,0 +1,20 @@
+.root {
+    -fx-background-color: radial-gradient(center 25% 25%, radius 60%, reflect, red, black );
+}
+.left {
+    -fx-fill: radial-gradient(center 50% 16%, radius 50%, reflect, papayawhip, rgba(183, 146, 104, 0.9) 80% );
+}
+.right {
+    -fx-fill: radial-gradient(center 50% 16%, radius 50%, reflect, papayawhip, rgba(152, 76, 45, 0.9) 80% );
+}
+.rail {
+    -fx-fill: linear-gradient(sienna, burlywood 25%, saddlebrown 50%)
+}
+.rail.selected {
+    -fx-fill: linear-gradient(firebrick, burlywood 25%, darkred 50%)
+}
+
+.text {
+    -fx-fill: transparent;
+}
+
