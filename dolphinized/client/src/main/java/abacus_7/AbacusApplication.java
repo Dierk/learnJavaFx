@@ -42,6 +42,12 @@ public class AbacusApplication extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
+
+        touchedBall = dolphin.presentationModel(AbacusConstants.PM_TOUCHED,
+            new ClientAttribute(ATT_SCALE),
+            new ClientAttribute(ATT_DIGIT),
+            new ClientAttribute(ATT_ON));
+
         dolphin.send(CMD_CREATE_BALLS, new OnFinishedHandlerAdapter() {
             @Override
             public void onFinished(List<ClientPresentationModel> models) {
@@ -49,7 +55,7 @@ public class AbacusApplication extends Application {
                 Pane root = new Pane();
 
                 paintTheRails(root);
-                paintEachBallAndBindToModel(root);
+                paintEachBallAndBindToModel(root, models);
 
                 primaryStage.setScene(new Scene(root, WIDTH + 2 * PADDING, HEIGHT + 2 * PADDING));
                 primaryStage.getScene().getStylesheets().add(CSS_FILENAME);
@@ -58,29 +64,21 @@ public class AbacusApplication extends Application {
         });
     }
 
-    private void paintEachBallAndBindToModel(Pane root) {
-
-        touchedBall = dolphin.presentationModel(AbacusConstants.PM_TOUCHED,
-            new ClientAttribute(ATT_RAIL_ID),
-            new ClientAttribute(ATT_DIGIT),
-            new ClientAttribute(ATT_ON));
-
-        for (final PresentationModel ballPm : dolphin.findAllPresentationModelsByType(TYPE_BALL)) {
-            Integer digit = (Integer) ballPm.getAt(ATT_DIGIT).getValue();
-            String railId = ballPm.getAt(ATT_RAIL_ID).getValue().toString();
-            Integer row = (Integer) dolphin.getAt(railId).getAt(ATT_SCALE).getValue();
+    private void paintEachBallAndBindToModel(Pane root, List<ClientPresentationModel> models) {
+        for (final ClientPresentationModel ballPm : models) {
+            Integer row    = (Integer) ballPm.getAt(ATT_SCALE).getValue();
+            Integer digit  = (Integer) ballPm.getAt(ATT_DIGIT).getValue();
 
             Circle ball = paintBall(root, digit, row);
             Text text   = paintDigit(root, digit, ball);
 
-            onClickToggleOnState((ClientPresentationModel) ballPm, ball, text);
+            onClickToggleOnState(ballPm, ball, text);
             visualizeOnState(ballPm, ball);
         }
     }
 
     private void paintTheRails(Pane root) {
-        for (PresentationModel railPm : dolphin.findAllPresentationModelsByType(TYPE_RAIL)) {
-            Integer scale = (Integer) railPm.getAt(ATT_SCALE).getValue();
+        for (int scale = 0; scale < ROW_COUNT; scale ++) {
             final Rectangle rail = RectangleBuilder.create()
                 .width(WIDTH)
                 .height(RAIL_HEIGHT)
