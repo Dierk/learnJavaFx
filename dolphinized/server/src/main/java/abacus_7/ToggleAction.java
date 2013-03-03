@@ -14,7 +14,7 @@ import static abacus_7.AbacusConstants.*;
 
 /**
  * Two business rules that determine the abacus behaviour:
- * - toggeling a digit needs updating its neighbours
+ * - toggling a digit needs updating its neighbours
  * - setting the highest digit causes an overflow
  */
 public class ToggleAction extends DolphinServerAction {
@@ -41,7 +41,7 @@ public class ToggleAction extends DolphinServerAction {
 
         updateNeighborDigits(scale, digit, on);
 
-        changeValue(touchedBall.getAt(ATT_ON), !on); // toggeling the current digit must come last!
+        changeValue(touchedBall.getAt(ATT_ON), !on); // toggling the current digit must come last!
     }
 
     private void onValueChanged(ValueChangedCommand command) {
